@@ -1,0 +1,4 @@
+﻿NAME                IMAGE                      COMMAND                  SERVICE      CREATED         STATUS                     PORTS
+fit4110-ai-lab05    lab-5-maalgaw-ai-service   "python main.py"         ai-service   5 minutes ago   Up 5 minutes (healthy)     0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp
+fit4110-api-lab05   lab-5-maalgaw-api          "sh -c 'uvicorn iot_ΓÇª"   api          5 minutes ago   Up 5 minutes (unhealthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+fit4110-db-lab05    postgres:15-alpine         "docker-entrypoint.sΓÇª"   db           5 minutes ago   Up 5 minutes (healthy)     5432/tcp

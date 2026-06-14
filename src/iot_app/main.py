@@ -108,18 +108,28 @@ def build_problem(
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
+    # Map of status codes to reason phrases
+    status_phrases = {
+        401: "Unauthorized",
+        403: "Forbidden",
+        404: "Not Found",
+        422: "Unprocessable Entity",
+        429: "Too Many Requests",
+        500: "Internal Server Error",
+    }
+    
     if isinstance(exc.detail, dict):
         problem = exc.detail
     else:
         problem = build_problem(
             status_code=exc.status_code,
-            title=status.HTTP_STATUS_CODES.get(exc.status_code, "HTTP Error"),
+            title=status_phrases.get(exc.status_code, "HTTP Error"),
             detail=str(exc.detail),
             instance=str(request.url.path),
         )
 
     problem.setdefault("status", exc.status_code)
-    problem.setdefault("title", status.HTTP_STATUS_CODES.get(exc.status_code, "HTTP Error"))
+    problem.setdefault("title", status_phrases.get(exc.status_code, "HTTP Error"))
     problem.setdefault("type", "about:blank")
     problem.setdefault("detail", "Request failed")
     problem.setdefault("instance", str(request.url.path))
@@ -152,6 +162,17 @@ async def validation_exception_handler(
         ),
         media_type="application/problem+json",
     )
+
+
+# Map of status codes to reason phrases
+_STATUS_PHRASES = {
+    401: "Unauthorized",
+    403: "Forbidden",
+    404: "Not Found",
+    422: "Unprocessable Entity",
+    429: "Too Many Requests",
+    500: "Internal Server Error",
+}
 
 
 def verify_bearer_token(authorization: Optional[str] = Header(default=None)) -> None:
